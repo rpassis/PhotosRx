@@ -1,6 +1,10 @@
 RxPhotos
 ======================================
 
+[![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![Build Status](https://travis-ci.org/rpassis/RxPhotos.svg?branch=master)](https://travis-ci.org/rpassis/RxPhotos)
+[![codecov](https://codecov.io/gh/rpassis/RxPhotos/branch/master/graph/badge.svg)](https://codecov.io/gh/rpassis/RxPhotos)
+
 ## About
 
 N/A
