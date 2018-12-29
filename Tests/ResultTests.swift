@@ -26,7 +26,8 @@ class ResultTests: XCTestCase {
         XCTAssertEqual(result.value, 10)
         XCTAssertNil(result.error)
         XCTAssertEqual(result.progress, 0)
-        XCTAssertEqual(result.isProcessing, false)
+        XCTAssertFalse(result.isProcessing)
+        XCTAssertTrue(result.isSuccess)
     }
 
     func testError() {
@@ -36,7 +37,8 @@ class ResultTests: XCTestCase {
             XCTFail("No error or incorrect error type found"); return
         }
         XCTAssertEqual(result.progress, 0)
-        XCTAssertEqual(result.isProcessing, false)
+        XCTAssertFalse(result.isProcessing)
+        XCTAssertFalse(result.isSuccess)
     }
 
     func testIsProcessing() {
@@ -44,7 +46,8 @@ class ResultTests: XCTestCase {
         XCTAssertEqual(result.value, nil)
         XCTAssertNil(result.error)
         XCTAssertEqual(result.progress, 98)
-        XCTAssertEqual(result.isProcessing, true)
+        XCTAssertTrue(result.isProcessing)
+        XCTAssertFalse(result.isSuccess)
     }
 
 }
