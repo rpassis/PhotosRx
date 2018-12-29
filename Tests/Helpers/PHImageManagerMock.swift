@@ -10,7 +10,10 @@ import Foundation
 import Photos
 @testable import PhotosRx
 
+// Use to enqueue response events
+// with PHImageManagerMock
 enum RequestImageResponse {
+    case data
     case image(degraded: Bool)
     case error
     case progress(Float)
@@ -24,11 +27,17 @@ class PHImageManagerMock: PHImageManager {
 
     private var events: [RequestImageResponse]?
     var imageRequestCancelled = false
-    func enqueueRequestImageResponse(with events: [RequestImageResponse]) {
+    func enqueueResponse(with events: [RequestImageResponse]) {
         self.events = events
     }
 
-    override func requestImage(for asset: PHAsset, targetSize: CGSize, contentMode: PHImageContentMode, options: PHImageRequestOptions?, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> PHImageRequestID {
+    override func requestImage(
+        for asset: PHAsset,
+        targetSize: CGSize,
+        contentMode: PHImageContentMode,
+        options: PHImageRequestOptions?,
+        resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void
+    ) -> PHImageRequestID {
         events?.forEach({ event in
             switch event {
             case .image(let degraded):
@@ -38,11 +47,31 @@ class PHImageManagerMock: PHImageManager {
             case .progress(let progress):
                 var flag: ObjCBool = false
                 options?.progressHandler?(Double(progress), nil, &flag, nil)
+            case _: break
             }
         })
         return PHImageRequestID(123)
     }
 
+    override func requestImageData(
+        for asset: PHAsset,
+        options: PHImageRequestOptions?,
+        resultHandler: @escaping (Data?, String?, UIImage.Orientation, [AnyHashable : Any]?) -> Void
+    ) -> PHImageRequestID {
+        events?.forEach({ event in
+            switch event {
+            case .data:
+                resultHandler(Data(), nil, .up, nil)
+            case .error:
+                resultHandler(nil, nil, .up, [PHImageErrorKey: PHImageManagerMockError.mockError])
+            case .progress(let progress):
+                var flag: ObjCBool = false
+                options?.progressHandler?(Double(progress), nil, &flag, nil)
+            case _: break
+            }
+        })
+        return PHImageRequestID(123)
+    }
     override func cancelImageRequest(_ requestID: PHImageRequestID) {
         imageRequestCancelled = true
     }

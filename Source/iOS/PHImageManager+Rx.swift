@@ -27,10 +27,10 @@ enum PHImageManagerError: Error {
 //    case videoPlaybackRequestFailed
 }
 
+typealias PHImageManagerImageResult = Result<UIImage>
+typealias PHImageManagerDataResult = Result<Data>
+
 extension Reactive where Base: PHImageManager {
-
-    typealias PHImageManagerImageResult = Result<UIImage>
-
 
     /// Requests the Photos framework for the backing image for a given PHAsset and options
     ///
@@ -84,6 +84,35 @@ extension Reactive where Base: PHImageManager {
             }
 
             // Cancel any current request on observable disposal
+            return Disposables.create {
+                self.base.cancelImageRequest(requestId)
+            }
+        }
+    }
+
+//    - (PHImageRequestID)requestImageDataForAsset:(PHAsset *)asset options:(nullable PHImageRequestOptions *)options resultHandler:(void(^)(NSData *__nullable imageData, NSString *__nullable dataUTI, UIImageOrientation orientation, NSDictionary *__nullable info))resultHandler;
+
+    func data(
+        for asset: PHAsset,
+        options: PHImageRequestOptions = PHImageRequestOptions.defaultImageRequestOptions
+        ) -> Observable<PHImageManagerDataResult> {
+        return Observable.create { observer -> Disposable in
+            // Progress report handler
+            options.progressHandler = { progress, _, _, _ in
+                observer.on(.next(.processing(Float(progress))))
+            }
+            let requestId = self.base.requestImageData(
+                for: asset,
+                options: options,
+                resultHandler: { (data, imageUTI, imageOrientation, info) in
+                    guard let data = data else {
+                        let error = info?[PHImageErrorKey] as? Error ?? PHImageManagerError.imageFetchRequestFailed
+                        observer.on(.next(.error(error)))
+                        return
+                    }
+                    observer.on(.next(.success(data)))
+                    observer.on(.completed)
+            })
             return Disposables.create {
                 self.base.cancelImageRequest(requestId)
             }
