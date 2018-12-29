@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5B9A8B1421D7E3660009EA25 /* RxPhotos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B9A8B0A21D7E3650009EA25 /* RxPhotos.framework */; };
+		5B9A8B1421D7E3660009EA25 /* PhotosRx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B9A8B0A21D7E3650009EA25 /* PhotosRx.framework */; };
 		5B9A8B1B21D7E3660009EA25 /* RxPhotos.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B9A8B0D21D7E3650009EA25 /* RxPhotos.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B9A8B2D21D7E70C0009EA25 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B9A8B2C21D7E70C0009EA25 /* RxSwift.framework */; };
 		5B9A8B2F21D7E7350009EA25 /* PHImageManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9A8B2E21D7E7350009EA25 /* PHImageManager+Rx.swift */; };
@@ -45,10 +45,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5B9A8B0A21D7E3650009EA25 /* RxPhotos.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxPhotos.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B9A8B0A21D7E3650009EA25 /* PhotosRx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhotosRx.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B9A8B0D21D7E3650009EA25 /* RxPhotos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RxPhotos.h; sourceTree = "<group>"; };
 		5B9A8B0E21D7E3650009EA25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5B9A8B1321D7E3660009EA25 /* RxPhotosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RxPhotosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B9A8B1321D7E3660009EA25 /* PhotosRxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotosRxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B9A8B1A21D7E3660009EA25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5B9A8B2C21D7E70C0009EA25 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		5B9A8B2E21D7E7350009EA25 /* PHImageManager+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHImageManager+Rx.swift"; sourceTree = "<group>"; };
@@ -73,7 +73,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B9A8B3E21D7F5510009EA25 /* RxTest.framework in Frameworks */,
-				5B9A8B1421D7E3660009EA25 /* RxPhotos.framework in Frameworks */,
+				5B9A8B1421D7E3660009EA25 /* PhotosRx.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,8 +93,8 @@
 		5B9A8B0B21D7E3650009EA25 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5B9A8B0A21D7E3650009EA25 /* RxPhotos.framework */,
-				5B9A8B1321D7E3660009EA25 /* RxPhotosTests.xctest */,
+				5B9A8B0A21D7E3650009EA25 /* PhotosRx.framework */,
+				5B9A8B1321D7E3660009EA25 /* PhotosRxTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -184,9 +184,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		5B9A8B0921D7E3650009EA25 /* RxPhotos */ = {
+		5B9A8B0921D7E3650009EA25 /* PhotosRx */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5B9A8B1E21D7E3660009EA25 /* Build configuration list for PBXNativeTarget "RxPhotos" */;
+			buildConfigurationList = 5B9A8B1E21D7E3660009EA25 /* Build configuration list for PBXNativeTarget "PhotosRx" */;
 			buildPhases = (
 				5B9A8B0521D7E3650009EA25 /* Headers */,
 				5B9A8B0621D7E3650009EA25 /* Sources */,
@@ -197,14 +197,14 @@
 			);
 			dependencies = (
 			);
-			name = RxPhotos;
+			name = PhotosRx;
 			productName = RxPhotos;
-			productReference = 5B9A8B0A21D7E3650009EA25 /* RxPhotos.framework */;
+			productReference = 5B9A8B0A21D7E3650009EA25 /* PhotosRx.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		5B9A8B1221D7E3660009EA25 /* RxPhotosTests */ = {
+		5B9A8B1221D7E3660009EA25 /* PhotosRxTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5B9A8B2121D7E3660009EA25 /* Build configuration list for PBXNativeTarget "RxPhotosTests" */;
+			buildConfigurationList = 5B9A8B2121D7E3660009EA25 /* Build configuration list for PBXNativeTarget "PhotosRxTests" */;
 			buildPhases = (
 				5B9A8B0F21D7E3660009EA25 /* Sources */,
 				5B9A8B1021D7E3660009EA25 /* Frameworks */,
@@ -216,9 +216,9 @@
 			dependencies = (
 				5B9A8B1621D7E3660009EA25 /* PBXTargetDependency */,
 			);
-			name = RxPhotosTests;
+			name = PhotosRxTests;
 			productName = RxPhotosTests;
-			productReference = 5B9A8B1321D7E3660009EA25 /* RxPhotosTests.xctest */;
+			productReference = 5B9A8B1321D7E3660009EA25 /* PhotosRxTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -240,7 +240,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5B9A8B0421D7E3650009EA25 /* Build configuration list for PBXProject "RxPhotos" */;
+			buildConfigurationList = 5B9A8B0421D7E3650009EA25 /* Build configuration list for PBXProject "PhotosRx" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -252,8 +252,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5B9A8B0921D7E3650009EA25 /* RxPhotos */,
-				5B9A8B1221D7E3660009EA25 /* RxPhotosTests */,
+				5B9A8B0921D7E3650009EA25 /* PhotosRx */,
+				5B9A8B1221D7E3660009EA25 /* PhotosRxTests */,
 			);
 		};
 /* End PBXProject section */
@@ -300,7 +300,7 @@
 /* Begin PBXTargetDependency section */
 		5B9A8B1621D7E3660009EA25 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5B9A8B0921D7E3650009EA25 /* RxPhotos */;
+			target = 5B9A8B0921D7E3650009EA25 /* PhotosRx */;
 			targetProxy = 5B9A8B1521D7E3660009EA25 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -534,7 +534,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5B9A8B0421D7E3650009EA25 /* Build configuration list for PBXProject "RxPhotos" */ = {
+		5B9A8B0421D7E3650009EA25 /* Build configuration list for PBXProject "PhotosRx" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5B9A8B1C21D7E3660009EA25 /* Debug */,
@@ -543,7 +543,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5B9A8B1E21D7E3660009EA25 /* Build configuration list for PBXNativeTarget "RxPhotos" */ = {
+		5B9A8B1E21D7E3660009EA25 /* Build configuration list for PBXNativeTarget "PhotosRx" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5B9A8B1F21D7E3660009EA25 /* Debug */,
@@ -552,7 +552,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5B9A8B2121D7E3660009EA25 /* Build configuration list for PBXNativeTarget "RxPhotosTests" */ = {
+		5B9A8B2121D7E3660009EA25 /* Build configuration list for PBXNativeTarget "PhotosRxTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5B9A8B2221D7E3660009EA25 /* Debug */,

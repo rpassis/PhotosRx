@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:RxPhotos.xcodeproj">
+      location = "self:/Users/rppassis/dev/tinybeans/lab/RxPhotos/PhotosRx.xcodeproj">
    </FileRef>
 </Workspace>

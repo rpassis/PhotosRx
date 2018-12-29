@@ -1,21 +1,21 @@
-RxPhotos
+PhotosRx ̰
 ======================================
 
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![Build Status](https://travis-ci.org/rpassis/RxPhotos.svg?branch=master)](https://travis-ci.org/rpassis/RxPhotos)
-[![codecov](https://codecov.io/gh/rpassis/RxPhotos/branch/master/graph/badge.svg)](https://codecov.io/gh/rpassis/RxPhotos)
+[![Build Status](https://travis-ci.org/rpassis/PhotosRx.svg?branch=master)](https://travis-ci.org/rpassis/PhotosRx)
+[![codecov](https://codecov.io/gh/rpassis/PhotosRx/branch/master/graph/badge.svg)](https://codecov.io/gh/rpassis/PhotosRx)
 
 ## About
 
-N/A
+The goal of this project is to incrementally add reactive support to all of Apple's Photos framework APis.
 
 ## Usage
 
-N/A
+[TODO]
 
 ## Example App
 
-N/A
+[TODO]
 
 ## Requirements
 
@@ -34,7 +34,7 @@ In your `Podfile`:
 use_frameworks!
 
 target "YOUR_TARGET_NAME" do
-  pod "RxPhotos"
+  pod "PhotosRx"
 end
 ```
 
@@ -51,7 +51,7 @@ pod install
 Add this to `Cartfile`
 
 ```
-github "rpassis/RxPhotos"
+github "rpassis/PhotosRx"
 ```
 
 In the same directory, run:
@@ -60,15 +60,15 @@ In the same directory, run:
 carthage update
 ```
 
-Link/Embed frameworks as explained [here](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application). Besides linking `RxPhotos`, you will also need to link `RxSwift` and `RxCocoa`.
+Link/Embed frameworks as explained [here](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application). Besides linking `PhotosRx`, you will also need to link `RxSwift` and `RxCocoa`.
 
 ## Contributing
 
 Help is always appreciated!
 
 ```shell
-git clone git@github.com:rpassis/RxPhotos.git
-cd RxPhotos
+git clone git@github.com:rpassis/PhotosRx.git
+cd PhotosRx
 ```
 > Or use your own forked repo.
 

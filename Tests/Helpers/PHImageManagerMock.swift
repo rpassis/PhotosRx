@@ -1,6 +1,6 @@
 //
 //  PHImageManagerMock.swift
-//  RxPhotos
+//  PhotosRx
 //
 //  Created by Rogerio de Paula Assis on 12/29/18.
 //  Copyright © 2018 Tinybeans. All rights reserved.
@@ -8,7 +8,7 @@
 
 import Foundation
 import Photos
-@testable import RxPhotos
+@testable import PhotosRx
 
 enum RequestImageResponse {
     case image(degraded: Bool)

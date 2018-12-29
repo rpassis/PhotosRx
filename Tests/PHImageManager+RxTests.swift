@@ -1,6 +1,6 @@
 //
 //  PHImageManager+RxTests.swift
-//  RxPhotosTests
+//  PhotosRxTests
 //
 //  Created by Rogerio de Paula Assis on 12/29/18.
 //  Copyright © 2018 Tinybeans. All rights reserved.
@@ -10,7 +10,7 @@ import XCTest
 import Photos
 import RxSwift
 import RxTest
-@testable import RxPhotos
+@testable import PhotosRx
 
 class PHImageManager_RxTests: XCTestCase {
 

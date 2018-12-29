@@ -1,6 +1,6 @@
 //
 //  Result.swift
-//  RxPhotos
+//  PhotosRx
 //
 //  Created by Rogerio de Paula Assis on 12/29/18.
 //  Copyright © 2018 Tinybeans. All rights reserved.

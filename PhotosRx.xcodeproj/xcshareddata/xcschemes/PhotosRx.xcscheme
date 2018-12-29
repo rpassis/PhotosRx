@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5B9A8B0921D7E3650009EA25"
-               BuildableName = "RxPhotos.framework"
-               BlueprintName = "RxPhotos"
-               ReferencedContainer = "container:RxPhotos.xcodeproj">
+               BuildableName = "PhotosRx.framework"
+               BlueprintName = "PhotosRx"
+               ReferencedContainer = "container:PhotosRx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,9 +34,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5B9A8B1221D7E3660009EA25"
-               BuildableName = "RxPhotosTests.xctest"
-               BlueprintName = "RxPhotosTests"
-               ReferencedContainer = "container:RxPhotos.xcodeproj">
+               BuildableName = "PhotosRxTests.xctest"
+               BlueprintName = "PhotosRxTests"
+               ReferencedContainer = "container:PhotosRx.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -44,9 +44,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5B9A8B0921D7E3650009EA25"
-            BuildableName = "RxPhotos.framework"
-            BlueprintName = "RxPhotos"
-            ReferencedContainer = "container:RxPhotos.xcodeproj">
+            BuildableName = "PhotosRx.framework"
+            BlueprintName = "PhotosRx"
+            ReferencedContainer = "container:PhotosRx.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -66,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5B9A8B0921D7E3650009EA25"
-            BuildableName = "RxPhotos.framework"
-            BlueprintName = "RxPhotos"
-            ReferencedContainer = "container:RxPhotos.xcodeproj">
+            BuildableName = "PhotosRx.framework"
+            BlueprintName = "PhotosRx"
+            ReferencedContainer = "container:PhotosRx.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -84,9 +84,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5B9A8B0921D7E3650009EA25"
-            BuildableName = "RxPhotos.framework"
-            BlueprintName = "RxPhotos"
-            ReferencedContainer = "container:RxPhotos.xcodeproj">
+            BuildableName = "PhotosRx.framework"
+            BlueprintName = "PhotosRx"
+            ReferencedContainer = "container:PhotosRx.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

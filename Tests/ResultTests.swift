@@ -1,13 +1,13 @@
 //
 //  ResultTests.swift
-//  RxPhotosTests
+//  PhotosRxTests
 //
 //  Created by Rogerio de Paula Assis on 12/29/18.
 //  Copyright © 2018 Tinybeans. All rights reserved.
 //
 
 import XCTest
-@testable import RxPhotos
+@testable import PhotosRx
 
 enum ResultTestError: Error {
     case testError
