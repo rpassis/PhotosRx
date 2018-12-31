@@ -26,7 +26,8 @@ The goal of this project is to incrementally add reactive support to all of Appl
 
 ### AVAssetExportSession
 
-* exportAsynchronously(completionHandler:)
+* ~~exportAsynchronously(completionHandler:)~~
+* ~~determineCompatibleFileTypes(completionHandler:)~~
 
 ## Requirements
 
