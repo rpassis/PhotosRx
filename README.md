@@ -2,8 +2,8 @@ PhotosRx
 ======================================
 
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![Build Status](https://travis-ci.org/rpassis/PhotosRx.svg?branch=master)](https://travis-ci.org/rpassis/PhotosRx)
-[![codecov](https://codecov.io/gh/rpassis/PhotosRx/branch/master/graph/badge.svg)](https://codecov.io/gh/rpassis/PhotosRx)
+[![Build Status](https://travis-ci.org/rpassis/PhotosRx.svg?branch=develop)](https://travis-ci.org/rpassis/PhotosRx)
+[![codecov](https://codecov.io/gh/rpassis/PhotosRx/branch/develop/graph/badge.svg)](https://codecov.io/gh/rpassis/PhotosRx)
 
 ## About
 
@@ -16,7 +16,7 @@ The goal of this project is to incrementally add reactive support to all of Appl
 * ~~requestImage(for:targetSize:contentMode:options:resultHandler:)~~
 * ~~requestImageData(for:options:resultHandler:)~~
 * ~~requestExportSession(forVideo:options:exportPreset:resultHandler:)~~
-* requestPlayerItem(forVideo:options:resultHandler:)
+* ~~requestPlayerItem(forVideo:options:resultHandler:)~~
 * requestLivePhoto(for:targetSize:contentMode:options:resultHandler:)
 * requestAVAsset(forVideo:options:resultHandler:)
 
@@ -26,7 +26,8 @@ The goal of this project is to incrementally add reactive support to all of Appl
 
 ### AVAssetExportSession
 
-* exportAsynchronously(completionHandler:)
+* ~~exportAsynchronously(completionHandler:)~~
+* ~~determineCompatibleFileTypes(completionHandler:)~~
 
 ## Requirements
 

@@ -241,14 +241,94 @@ extension PHImageManager_RxTests {
     func testVideoExportRequestCancelledOnDispose() {
         let asset = PHAsset()
         // When
+        subject.enqueueResponse(with: .progress(999))
         let observer = scheduler.createObserver(Result<URL>.self)
-        let disposable = subject.rx
+        subject.rx
             .exportVideo(for: asset, destination: URL(string: "https://me.com")!)
+            .debug("-- requestCancelledTest --")
             .subscribe(observer)
-
-        XCTAssertFalse(subject.requestCancelled)
-        disposable.dispose()
+            .disposed(by: bag)
         XCTAssertTrue(subject.requestCancelled)
     }
 
+}
+
+extension PHImageManager_RxTests {
+
+    func testRequestPlayerItem_Success() {
+        let asset = PHAsset()
+        subject.enqueueResponse(with: .playerItem)
+        let observer = scheduler.createObserver(Result<AVPlayerItem>.self)
+
+        // When
+        subject.rx
+            .requestPlayerItem(for: asset)
+            .subscribe(observer)
+            .disposed(by: bag)
+
+        let events = observer.events
+        XCTAssertEqual(events.count, 2)
+        guard let firstEvent = events.first?.value, case .next = firstEvent else {
+            XCTFail("Unexpected event found: \(String(describing: events.first))")
+            return
+        }
+        guard let lastEvent = events.last?.value, case .completed = lastEvent else {
+            XCTFail("Unexpected event found: \(String(describing: events.last))")
+            return
+        }
+    }
+
+    func testRequestPlayerItem_Error() {
+        let asset = PHAsset()
+        let error = PHImageManagerMockError.mockError
+        subject.enqueueResponse(with: .error(error))
+        let observer = scheduler.createObserver(Result<AVPlayerItem>.self)
+
+        // When
+        subject.rx
+            .requestPlayerItem(for: asset)
+            .subscribe(observer)
+            .disposed(by: bag)
+
+        let events = observer.events
+        XCTAssertEqual(events.count, 2)
+        guard let firstEvent = events.first?.value.element, case .error = firstEvent else {
+            XCTFail("Unexpected event found: \(String(describing: events.first))")
+            return
+        }
+    }
+
+    func testRequestPlayerItem_Progress() {
+        let asset = PHAsset()
+        subject.enqueueResponse(with: .progress(999))
+        let observer = scheduler.createObserver(Result<AVPlayerItem>.self)
+
+        // When
+        subject.rx
+            .requestPlayerItem(for: asset)
+            .subscribe(observer)
+            .disposed(by: bag)
+
+        let events = observer.events
+        XCTAssertEqual(events.count, 1)
+        guard let firstEvent = events.first?.value.element, case .processing(let f) = firstEvent, f == 999 else {
+            XCTFail("Unexpected event found: \(String(describing: events.first))")
+            return
+        }
+    }
+
+    func testRequestPlayerItemCancelledOnDispose() {
+        let asset = PHAsset()
+        // When
+        subject.enqueueResponse(with: .progress(999))
+        let observer = scheduler.createObserver(Result<AVPlayerItem>.self)
+        let disposable = subject.rx
+            .requestPlayerItem(for: asset)
+            .debug("-- requestCancelledTest --")
+            .subscribe(observer)
+
+        disposable.dispose()
+        XCTAssertTrue(subject.requestCancelled)
+
+    }
 }

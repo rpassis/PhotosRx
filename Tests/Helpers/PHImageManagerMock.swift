@@ -13,10 +13,12 @@ import Photos
 // Use to enqueue response events
 // with PHImageManagerMock
 enum PHImageManagerMockResponse {
+    case compatibleTypes([AVFileType])
     case data(Data)
     case error(Error)
     case image(UIImage, degraded: Bool)
     case progress(Float)
+    case playerItem
     case video(URL)
 }
 
@@ -24,6 +26,8 @@ enum PHImageManagerMockError: Error {
     case mockError
 }
 
+// Mock used to test the Rx implementations
+// of PHIImageManager methods
 class PHImageManagerMock: PHImageManager {
 
     private var event: PHImageManagerMockResponse?
@@ -98,58 +102,24 @@ class PHImageManagerMock: PHImageManager {
         resultHandler(session, info)
         return PHImageRequestID(123)
     }
-}
 
-fileprivate class AVAssetExportSessionMock: AVAssetExportSession {
-
-    private var _status: AVAssetExportSession.Status = .unknown
-    override var status: AVAssetExportSession.Status {
-        return _status
-    }
-
-    private var _error: Error?
-    override var error: Error? {
-        return _error
-    }
-
-    private var _progress: Float = 0
-    override var progress: Float {
-        return _progress
-    }
-
-    private var event: PHImageManagerMockResponse?
-    var imageRequestCancelled = false
-    func enqueueResponse(with event: PHImageManagerMockResponse?) {
-        self.event = event
-    }
-
-    override func determineCompatibleFileTypes(completionHandler handler: @escaping ([AVFileType]) -> Void) {
-        // Always succeed
-        handler([AVFileType.mov])
-    }
-
-    override func exportAsynchronously(completionHandler handler: @escaping () -> Void) {
-        guard let event = event else {
-            handler();
-            return
-        }
-        switch event {
-        case .error(let e):
-            _status = .failed
-            _error = e
-            handler()
-        case .progress(let p):
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
-                self._status = .exporting
-                self._progress = p
-                handler()
+    override func requestPlayerItem(
+        forVideo asset: PHAsset,
+        options: PHVideoRequestOptions?,
+        resultHandler: @escaping (AVPlayerItem?, [AnyHashable : Any]?) -> Void) -> PHImageRequestID {
+        if let event = event {
+            switch event {
+            case .error(let e):
+                resultHandler(nil, [PHImageErrorKey: e])
+            case .progress(let progress):
+                var flag: ObjCBool = false
+                options?.progressHandler?(Double(progress), nil, &flag, nil)
+            case .playerItem:
+                let playerItem = AVPlayerItem(url: URL(string: "https://me.com")!)
+                resultHandler(playerItem, [:])
+            case _: break
             }
-        case .video:
-            _status = .completed
-            handler()
-        case _:
-            handler()
         }
+        return PHImageRequestID(123)
     }
-
 }
