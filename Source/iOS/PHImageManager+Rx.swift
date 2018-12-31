@@ -11,8 +11,18 @@ import Photos
 import RxSwift
 
 fileprivate extension PHImageRequestOptions {
-    static var defaultImageRequestOptions: PHImageRequestOptions {
+    static var `default`: PHImageRequestOptions {
         let options = PHImageRequestOptions()
+        options.isNetworkAccessAllowed = true
+        options.deliveryMode = .highQualityFormat
+        options.version = .current
+        return options
+    }
+}
+
+fileprivate extension PHVideoRequestOptions {
+    static var `default`: PHVideoRequestOptions {
+        let options = PHVideoRequestOptions()
         options.isNetworkAccessAllowed = true
         options.deliveryMode = .highQualityFormat
         options.version = .current
@@ -23,12 +33,14 @@ fileprivate extension PHImageRequestOptions {
 enum PHImageManagerError: Error {
     case imageFetchRequestFailed
     case videoFetchRequestFailed
+    case unsupportedVideoFormat
 //    case videoFetchRequestReturnedComposition(AVComposition)
 //    case videoPlaybackRequestFailed
 }
 
 typealias PHImageManagerImageResult = Result<UIImage>
-typealias PHImageManagerDataResult = Result<Data>
+typealias PHImageManagerDataResult  = Result<Data>
+typealias PHImageManagerURLResult   = Result<URL>
 
 extension Reactive where Base: PHImageManager {
 
@@ -40,18 +52,23 @@ extension Reactive where Base: PHImageManager {
     ///   - contentMode: The desired contentMode
     ///   - options: The image request options
     /// - Returns:
-    ///   A Result<UIImage, Error> specialized observable that can report
+    ///   A Result<UIImage> specialized observable that can report
     ///   on progress, success and error.
     func image(
         for asset: PHAsset,
         targetSize: CGSize,
         contentMode: PHImageContentMode = .default,
-        options: PHImageRequestOptions = PHImageRequestOptions.defaultImageRequestOptions
+        options: PHImageRequestOptions = PHImageRequestOptions.default
     ) -> Observable<PHImageManagerImageResult> {
 
         return Observable.create { observer -> Disposable in
             // Progress report handler
-            options.progressHandler = { progress, _, _, _ in
+            options.progressHandler = { progress, error, _, _ in
+                if let error = error {
+                    observer.on(.next(.error(error)))
+                    observer.on(.completed)
+                    return
+                }
                 observer.on(.next(.processing(Float(progress))))
             }
             
@@ -64,6 +81,7 @@ extension Reactive where Base: PHImageManager {
                     guard let image = image else {
                         let error = info?[PHImageErrorKey] as? Error ?? PHImageManagerError.imageFetchRequestFailed
                         observer.on(.next(.error(error)))
+                        observer.on(.completed)
                         return
                     }
                     // Otherwise send a success event with the image
@@ -90,15 +108,27 @@ extension Reactive where Base: PHImageManager {
         }
     }
 
-//    - (PHImageRequestID)requestImageDataForAsset:(PHAsset *)asset options:(nullable PHImageRequestOptions *)options resultHandler:(void(^)(NSData *__nullable imageData, NSString *__nullable dataUTI, UIImageOrientation orientation, NSDictionary *__nullable info))resultHandler;
 
+    /// Requests the Photos framework for the backing data blob for a given PHAsset and options
+    ///
+    /// - Parameters:
+    ///   - asset: the PHAsset for which the data is being requested
+    ///   - options: The image request options
+    /// - Returns:
+    ///   A Result<Data> specialized observable that can report
+    ///   on progress, success and error.
     func data(
         for asset: PHAsset,
-        options: PHImageRequestOptions = PHImageRequestOptions.defaultImageRequestOptions
+        options: PHImageRequestOptions = PHImageRequestOptions.default
         ) -> Observable<PHImageManagerDataResult> {
         return Observable.create { observer -> Disposable in
             // Progress report handler
-            options.progressHandler = { progress, _, _, _ in
+            options.progressHandler = { progress, error, _, _ in
+                if let error = error {
+                    observer.on(.next(.error(error)))
+                    observer.on(.completed)
+                    return
+                }
                 observer.on(.next(.processing(Float(progress))))
             }
             let requestId = self.base.requestImageData(
@@ -108,6 +138,7 @@ extension Reactive where Base: PHImageManager {
                     guard let data = data else {
                         let error = info?[PHImageErrorKey] as? Error ?? PHImageManagerError.imageFetchRequestFailed
                         observer.on(.next(.error(error)))
+                        observer.on(.completed)
                         return
                     }
                     observer.on(.next(.success(data)))
@@ -120,3 +151,99 @@ extension Reactive where Base: PHImageManager {
     }
 }
 
+extension Reactive where Base: PHImageManager {
+
+    func exportVideo(
+        for asset: PHAsset,
+        options: PHVideoRequestOptions = PHVideoRequestOptions.default,
+        exportPreset: String = AVAssetExportPresetHighestQuality,
+        destination url: URL) -> Observable<PHImageManagerURLResult> {
+        return Observable.create({ observer -> Disposable in
+            options.progressHandler = { progress, error, _, _ in
+                if let error = error {
+                    observer.on(.next(.error(error)))
+                    observer.on(.completed)
+                    return
+                }
+                observer.on(.next(.processing(Float(progress))))
+            }
+            let exportSessionProgressUpdater = ExportSessionProgressUpdater(observer: observer)
+            let requestId = self.base.requestExportSession(
+                forVideo: asset,
+                options: options,
+                exportPreset: exportPreset,
+                resultHandler: { (session, info) in
+                    guard let session = session else {
+                        let error = PHImageManagerError.videoFetchRequestFailed
+                        observer.on(.next(.error(error)));
+                        observer.on(.completed)
+                        return
+                    }
+                    exportSessionProgressUpdater.session = session
+                    if let error = info?[PHImageErrorKey] as? Error {
+                        observer.on(.next(.error(error)));
+                        observer.on(.completed)
+                        return
+                    }
+                    session.outputURL = url
+                    session.determineCompatibleFileTypes(completionHandler: { fileTypes in
+                        guard fileTypes.contains(AVFileType.mov) else {
+                            let error = PHImageManagerError.unsupportedVideoFormat
+                            observer.on(.next(.error(error)));
+                            observer.on(.completed)
+                            return
+                        }
+                        session.exportAsynchronously {
+                            switch session.status {
+                            case .completed, .unknown:
+                                observer.on(.next(.success(url)))
+                                observer.on(.completed)
+                            case .waiting, .exporting:
+                                let progress = session.progress
+                                observer.on(.next(.processing(progress)))
+                            case .failed, .cancelled:
+                                let error = session.error ?? PHImageManagerError.videoFetchRequestFailed
+                                observer.on(.next(.error(error)))
+                                observer.on(.completed)
+                            }
+                        }
+                    })
+            })
+
+            return Disposables.create {
+                exportSessionProgressUpdater.session?.cancelExport()
+                exportSessionProgressUpdater.session = nil
+                self.base.cancelImageRequest(requestId)
+            }
+        })
+    }
+}
+
+fileprivate class ExportSessionProgressUpdater {
+
+    private var timer: Timer?
+    private let observer: AnyObserver<PHImageManagerURLResult>
+    var session: AVAssetExportSession? {
+        didSet { updateTimer() }
+    }
+
+    deinit {
+        print("timer dealloc'd")
+    }
+
+    init(observer: AnyObserver<PHImageManagerURLResult>) {
+        self.observer = observer
+    }
+
+    private func updateTimer() {
+        DispatchQueue.main.async { [weak self] in
+            self?.timer?.invalidate()
+            guard let session = self?.session else { return }
+            self?.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
+                let progress = session.progress
+                self?.observer.on(.next(.processing(progress)))
+            })
+        }
+    }
+
+}
