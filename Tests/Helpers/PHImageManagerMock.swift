@@ -12,7 +12,7 @@ import Photos
 
 // Use to enqueue response events
 // with PHImageManagerMock
-enum RequestImageResponse {
+enum PHImageManagerMockResponse {
     case data(Data)
     case error(Error)
     case image(UIImage, degraded: Bool)
@@ -26,9 +26,9 @@ enum PHImageManagerMockError: Error {
 
 class PHImageManagerMock: PHImageManager {
 
-    private var event: RequestImageResponse?
-    var imageRequestCancelled = false
-    func enqueueResponse(with event: RequestImageResponse?) {
+    private var event: PHImageManagerMockResponse?
+    var requestCancelled = false
+    func enqueueResponse(with event: PHImageManagerMockResponse?) {
         self.event = event
     }
 
@@ -79,7 +79,7 @@ class PHImageManagerMock: PHImageManager {
     }
 
     override func cancelImageRequest(_ requestID: PHImageRequestID) {
-        imageRequestCancelled = true
+        requestCancelled = true
     }
 
     override func requestExportSession(
@@ -117,37 +117,39 @@ fileprivate class AVAssetExportSessionMock: AVAssetExportSession {
         return _progress
     }
 
-    private var event: RequestImageResponse?
+    private var event: PHImageManagerMockResponse?
     var imageRequestCancelled = false
-    func enqueueResponse(with event: RequestImageResponse?) {
+    func enqueueResponse(with event: PHImageManagerMockResponse?) {
         self.event = event
     }
 
     override func determineCompatibleFileTypes(completionHandler handler: @escaping ([AVFileType]) -> Void) {
+        // Always succeed
         handler([AVFileType.mov])
     }
 
     override func exportAsynchronously(completionHandler handler: @escaping () -> Void) {
-        if let event = event {
-            switch event {
-            case .error(let e):
-                _status = .failed
-                _error = e
-                handler()
-            case .progress(let p):
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
-                    self._status = .exporting
-                    self._progress = p
-                    handler()
-                }
-            case .video:
-                _status = .completed
-                handler()
-            case _:
+        guard let event = event else {
+            handler();
+            return
+        }
+        switch event {
+        case .error(let e):
+            _status = .failed
+            _error = e
+            handler()
+        case .progress(let p):
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+                self._status = .exporting
+                self._progress = p
                 handler()
             }
+        case .video:
+            _status = .completed
+            handler()
+        case _:
+            handler()
         }
-
     }
 
 }

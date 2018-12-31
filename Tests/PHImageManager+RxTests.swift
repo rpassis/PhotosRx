@@ -103,9 +103,9 @@ class PHImageManager_RxTests: XCTestCase {
             .image(for: asset, targetSize: size)
             .subscribe(observer)
 
-        XCTAssertFalse(subject.imageRequestCancelled)
+        XCTAssertFalse(subject.requestCancelled)
         disposable.dispose()
-        XCTAssertTrue(subject.imageRequestCancelled)
+        XCTAssertTrue(subject.requestCancelled)
     }
 }
 
@@ -166,9 +166,9 @@ extension PHImageManager_RxTests {
         let disposable = subject.rx
             .data(for: asset)
             .subscribe(observer)
-        XCTAssertFalse(subject.imageRequestCancelled)
+        XCTAssertFalse(subject.requestCancelled)
         disposable.dispose()
-        XCTAssertTrue(subject.imageRequestCancelled)
+        XCTAssertTrue(subject.requestCancelled)
     }
 
 }
@@ -236,6 +236,19 @@ extension PHImageManager_RxTests {
         let events = observer.events
         XCTAssertEqual(events.count, 6)
         XCTAssertEqual(.progress(999), [events.last?.value].compactMap { $0 })
+    }
+
+    func testVideoExportRequestCancelledOnDispose() {
+        let asset = PHAsset()
+        // When
+        let observer = scheduler.createObserver(Result<URL>.self)
+        let disposable = subject.rx
+            .exportVideo(for: asset, destination: URL(string: "https://me.com")!)
+            .subscribe(observer)
+
+        XCTAssertFalse(subject.requestCancelled)
+        disposable.dispose()
+        XCTAssertTrue(subject.requestCancelled)
     }
 
 }

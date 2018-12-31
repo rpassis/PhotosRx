@@ -195,7 +195,7 @@ extension Reactive where Base: PHImageManager {
                         }
                         session.exportAsynchronously {
                             switch session.status {
-                            case .completed, .unknown:
+                            case .completed:
                                 observer.on(.next(.success(url)))
                                 observer.on(.completed)
                             case .waiting, .exporting:
@@ -205,6 +205,8 @@ extension Reactive where Base: PHImageManager {
                                 let error = session.error ?? PHImageManagerError.videoFetchRequestFailed
                                 observer.on(.next(.error(error)))
                                 observer.on(.completed)
+                            case .unknown:
+                                break
                             }
                         }
                     })
@@ -223,11 +225,12 @@ fileprivate class ExportSessionProgressUpdater {
 
     private var timer: Timer?
     private let observer: AnyObserver<PHImageManagerURLResult>
-    var session: AVAssetExportSession? {
+    weak var session: AVAssetExportSession? {
         didSet { updateTimer() }
     }
 
     deinit {
+        timer?.invalidate()
         print("timer dealloc'd")
     }
 

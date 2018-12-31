@@ -12,7 +12,7 @@ import RxSwift
 @testable import PhotosRx
 
 func XCTAssertEqual<T>(
-    _ enqueuedEvent: RequestImageResponse, _ receivedEvents: [Event<Result<T>>],
+    _ enqueuedEvent: PHImageManagerMockResponse, _ receivedEvents: [Event<Result<T>>],
     file: StaticString = #file, line: UInt = #line) {
     switch enqueuedEvent {
     case .data(let d):
