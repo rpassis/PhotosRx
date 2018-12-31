@@ -83,7 +83,7 @@ func XCTAssertEqual<T>(
             XCTFail("Incorrect Result event found, .processing expected", file: file, line: line)
         }
 
-    case .compatibleTypes:
+    case .compatibleTypes, .playerItem:
         fatalError("Not implemented")
     }
 

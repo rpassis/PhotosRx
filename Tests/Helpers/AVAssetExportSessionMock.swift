@@ -9,6 +9,8 @@
 import Foundation
 import Photos
 
+// Mock used to test the Rx implementations
+// of AVAssetExportSession methods
 class AVAssetExportSessionMock: AVAssetExportSession {
 
     private var _status: AVAssetExportSession.Status = .unknown

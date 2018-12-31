@@ -13,18 +13,21 @@ import Photos
 // Use to enqueue response events
 // with PHImageManagerMock
 enum PHImageManagerMockResponse {
+    case compatibleTypes([AVFileType])
     case data(Data)
     case error(Error)
     case image(UIImage, degraded: Bool)
     case progress(Float)
+    case playerItem
     case video(URL)
-    case compatibleTypes([AVFileType])
 }
 
 enum PHImageManagerMockError: Error {
     case mockError
 }
 
+// Mock used to test the Rx implementations
+// of PHIImageManager methods
 class PHImageManagerMock: PHImageManager {
 
     private var event: PHImageManagerMockResponse?
@@ -97,6 +100,26 @@ class PHImageManagerMock: PHImageManager {
         }()
         session?.enqueueResponse(with: event)
         resultHandler(session, info)
+        return PHImageRequestID(123)
+    }
+
+    override func requestPlayerItem(
+        forVideo asset: PHAsset,
+        options: PHVideoRequestOptions?,
+        resultHandler: @escaping (AVPlayerItem?, [AnyHashable : Any]?) -> Void) -> PHImageRequestID {
+        if let event = event {
+            switch event {
+            case .error(let e):
+                resultHandler(nil, [PHImageErrorKey: e])
+            case .progress(let progress):
+                var flag: ObjCBool = false
+                options?.progressHandler?(Double(progress), nil, &flag, nil)
+            case .playerItem:
+                let playerItem = AVPlayerItem(url: URL(string: "https://me.com")!)
+                resultHandler(playerItem, [:])
+            case _: break
+            }
+        }
         return PHImageRequestID(123)
     }
 }

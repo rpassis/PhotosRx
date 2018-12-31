@@ -16,7 +16,7 @@ The goal of this project is to incrementally add reactive support to all of Appl
 * ~~requestImage(for:targetSize:contentMode:options:resultHandler:)~~
 * ~~requestImageData(for:options:resultHandler:)~~
 * ~~requestExportSession(forVideo:options:exportPreset:resultHandler:)~~
-* requestPlayerItem(forVideo:options:resultHandler:)
+* ~~requestPlayerItem(forVideo:options:resultHandler:)~~
 * requestLivePhoto(for:targetSize:contentMode:options:resultHandler:)
 * requestAVAsset(forVideo:options:resultHandler:)
 

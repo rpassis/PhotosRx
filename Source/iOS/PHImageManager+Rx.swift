@@ -34,6 +34,7 @@ enum PHImageManagerError: Error {
     case imageFetchRequestFailed
     case videoFetchRequestFailed
     case unsupportedVideoFormat
+    case playerItemRequestFailed
 //    case videoFetchRequestReturnedComposition(AVComposition)
 //    case videoPlaybackRequestFailed
 }
@@ -41,6 +42,7 @@ enum PHImageManagerError: Error {
 typealias PHImageManagerImageResult = Result<UIImage>
 typealias PHImageManagerDataResult  = Result<Data>
 typealias PHImageManagerURLResult   = Result<URL>
+typealias PHImageManagerPlayerItemResult = Result<AVPlayerItem>
 
 extension Reactive where Base: PHImageManager {
 
@@ -259,4 +261,43 @@ fileprivate class ExportSessionProgressUpdater {
         }
     }
 
+}
+
+extension Reactive where Base: PHImageManager {
+
+    func requestPlayerItem(
+        for video: PHAsset,
+        options: PHVideoRequestOptions = PHVideoRequestOptions.default) -> Observable<PHImageManagerPlayerItemResult> {
+        return Observable.create { observer in
+            options.progressHandler = { progress, error, _, _ in
+                if let error = error {
+                    observer.on(.next(.error(error)))
+                    observer.on(.completed)
+                    return
+                }
+                observer.on(.next(.processing(Float(progress))))
+            }
+            let requestId = self.base.requestPlayerItem(
+                forVideo: video,
+                options: options,
+                resultHandler: { playerItem, info in
+                    guard let playerItem = playerItem else {
+                        let error = PHImageManagerError.playerItemRequestFailed
+                        observer.on(.next(.error(error)))
+                        observer.on(.completed)
+                        return
+                    }
+                    if let error = info?[PHImageErrorKey] as? Error {
+                        observer.on(.next(.error(error)))
+                        observer.on(.completed)
+                        return
+                    }
+                    observer.on(.next(Result.success(playerItem)))
+                    observer.on(.completed)
+            })
+            return Disposables.create {
+                self.base.cancelImageRequest(requestId)
+            }
+        }
+    }
 }
