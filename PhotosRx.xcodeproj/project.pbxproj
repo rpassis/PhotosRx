@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5B12F95021DA652D005CD358 /* AVAssetExportSession+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F94F21DA652D005CD358 /* AVAssetExportSession+Rx.swift */; };
+		5B12F95221DAA200005CD358 /* AVAssetExportSession+RxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B12F95121DAA200005CD358 /* AVAssetExportSession+RxTests.swift */; };
 		5B5377FF21D8FB0E008F74F2 /* XCTAssert+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5377FE21D8FB0E008F74F2 /* XCTAssert+Custom.swift */; };
 		5B9A8B1421D7E3660009EA25 /* PhotosRx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B9A8B0A21D7E3650009EA25 /* PhotosRx.framework */; };
 		5B9A8B1B21D7E3660009EA25 /* RxPhotos.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B9A8B0D21D7E3650009EA25 /* RxPhotos.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -20,6 +21,7 @@
 		5B9A8B3B21D7F1890009EA25 /* PHImageManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9A8B3921D7F1850009EA25 /* PHImageManagerMock.swift */; };
 		5B9A8B3E21D7F5510009EA25 /* RxTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B9A8B3D21D7F5510009EA25 /* RxTest.framework */; };
 		5B9A8B3F21D7F55E0009EA25 /* RxTest.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5B9A8B3D21D7F5510009EA25 /* RxTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5BB45BE121DAA3AC002589B8 /* AVAssetExportSessionMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB45BDF21DAA3A8002589B8 /* AVAssetExportSessionMock.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		5B12F94F21DA652D005CD358 /* AVAssetExportSession+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAssetExportSession+Rx.swift"; sourceTree = "<group>"; };
+		5B12F95121DAA200005CD358 /* AVAssetExportSession+RxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAssetExportSession+RxTests.swift"; sourceTree = "<group>"; };
 		5B5377FE21D8FB0E008F74F2 /* XCTAssert+Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTAssert+Custom.swift"; sourceTree = "<group>"; };
 		5B9A8B0A21D7E3650009EA25 /* PhotosRx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhotosRx.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B9A8B0D21D7E3650009EA25 /* RxPhotos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RxPhotos.h; sourceTree = "<group>"; };
@@ -61,6 +64,7 @@
 		5B9A8B3721D7F1720009EA25 /* PHImageManager+RxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHImageManager+RxTests.swift"; sourceTree = "<group>"; };
 		5B9A8B3921D7F1850009EA25 /* PHImageManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHImageManagerMock.swift; sourceTree = "<group>"; };
 		5B9A8B3D21D7F5510009EA25 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/iOS/RxTest.framework; sourceTree = "<group>"; };
+		5BB45BDF21DAA3A8002589B8 /* AVAssetExportSessionMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAssetExportSessionMock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +122,7 @@
 				5B9A8B2621D7E3DD0009EA25 /* Support */,
 				5B9A8B3C21D7F1920009EA25 /* Helpers */,
 				5B9A8B3721D7F1720009EA25 /* PHImageManager+RxTests.swift */,
+				5B12F95121DAA200005CD358 /* AVAssetExportSession+RxTests.swift */,
 				5B9A8B3221D7EBA20009EA25 /* ResultTests.swift */,
 			);
 			path = Tests;
@@ -171,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				5B9A8B3921D7F1850009EA25 /* PHImageManagerMock.swift */,
+				5BB45BDF21DAA3A8002589B8 /* AVAssetExportSessionMock.swift */,
 				5B5377FE21D8FB0E008F74F2 /* XCTAssert+Custom.swift */,
 			);
 			path = Helpers;
@@ -298,7 +304,9 @@
 			files = (
 				5B5377FF21D8FB0E008F74F2 /* XCTAssert+Custom.swift in Sources */,
 				5B9A8B3B21D7F1890009EA25 /* PHImageManagerMock.swift in Sources */,
+				5BB45BE121DAA3AC002589B8 /* AVAssetExportSessionMock.swift in Sources */,
 				5B9A8B3321D7EBA20009EA25 /* ResultTests.swift in Sources */,
+				5B12F95221DAA200005CD358 /* AVAssetExportSession+RxTests.swift in Sources */,
 				5B9A8B3821D7F1720009EA25 /* PHImageManager+RxTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

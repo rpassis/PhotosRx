@@ -34,6 +34,7 @@ extension Reactive where Base: AVAssetExportSession {
                 case .exporting, .waiting, .unknown:
                     observer.on(.next((status: self.base.status, progress: self.base.progress)))
                 case .completed, .cancelled:
+                    observer.on(.next((status: self.base.status, progress: self.base.progress)))
                     observer.on(.completed)
                 case .failed:
                     let error = self.base.error ?? PHImageManagerError.videoFetchRequestFailed

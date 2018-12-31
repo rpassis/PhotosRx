@@ -18,6 +18,7 @@ enum PHImageManagerMockResponse {
     case image(UIImage, degraded: Bool)
     case progress(Float)
     case video(URL)
+    case compatibleTypes([AVFileType])
 }
 
 enum PHImageManagerMockError: Error {
@@ -98,58 +99,4 @@ class PHImageManagerMock: PHImageManager {
         resultHandler(session, info)
         return PHImageRequestID(123)
     }
-}
-
-fileprivate class AVAssetExportSessionMock: AVAssetExportSession {
-
-    private var _status: AVAssetExportSession.Status = .unknown
-    override var status: AVAssetExportSession.Status {
-        return _status
-    }
-
-    private var _error: Error?
-    override var error: Error? {
-        return _error
-    }
-
-    private var _progress: Float = 0
-    override var progress: Float {
-        return _progress
-    }
-
-    private var event: PHImageManagerMockResponse?
-    var imageRequestCancelled = false
-    func enqueueResponse(with event: PHImageManagerMockResponse?) {
-        self.event = event
-    }
-
-    override func determineCompatibleFileTypes(completionHandler handler: @escaping ([AVFileType]) -> Void) {
-        // Always succeed
-        handler([AVFileType.mov])
-    }
-
-    override func exportAsynchronously(completionHandler handler: @escaping () -> Void) {
-        guard let event = event else {
-            handler();
-            return
-        }
-        switch event {
-        case .error(let e):
-            _status = .failed
-            _error = e
-            handler()
-        case .progress(let p):
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
-                self._status = .exporting
-                self._progress = p
-                handler()
-            }
-        case .video:
-            _status = .completed
-            handler()
-        case _:
-            handler()
-        }
-    }
-
 }

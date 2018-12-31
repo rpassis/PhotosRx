@@ -71,5 +71,10 @@ func XCTAssertEqual<T>(
         } else {
             XCTFail("Incorrect Result event found, .processing expected", file: file, line: line)
         }
+
+    case .compatibleTypes:
+        fatalError("Not implemented")
     }
+
+
 }
