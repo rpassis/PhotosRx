@@ -2,8 +2,8 @@ PhotosRx
 ======================================
 
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![Build Status](https://travis-ci.org/rpassis/PhotosRx.svg?branch=master)](https://travis-ci.org/rpassis/PhotosRx)
-[![codecov](https://codecov.io/gh/rpassis/PhotosRx/branch/master/graph/badge.svg)](https://codecov.io/gh/rpassis/PhotosRx)
+[![Build Status](https://travis-ci.org/rpassis/PhotosRx.svg?branch=develop)](https://travis-ci.org/rpassis/PhotosRx)
+[![codecov](https://codecov.io/gh/rpassis/PhotosRx/branch/develop/graph/badge.svg)](https://codecov.io/gh/rpassis/PhotosRx)
 
 ## About
 
