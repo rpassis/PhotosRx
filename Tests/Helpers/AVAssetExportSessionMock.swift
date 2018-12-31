@@ -34,12 +34,12 @@ class AVAssetExportSessionMock: AVAssetExportSession {
 
     override func determineCompatibleFileTypes(completionHandler handler: @escaping ([AVFileType]) -> Void) {
         guard let event = event else {
-            handler([]);
+            handler([AVFileType.mov]);
             return
         }
         switch event {
         case .compatibleTypes(let types): handler(types)
-        case _: handler([])
+        case _: handler([AVFileType.mov])
         }
     }
 
