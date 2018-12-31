@@ -241,13 +241,13 @@ extension PHImageManager_RxTests {
     func testVideoExportRequestCancelledOnDispose() {
         let asset = PHAsset()
         // When
+        subject.enqueueResponse(with: .progress(999))
         let observer = scheduler.createObserver(Result<URL>.self)
-        let disposable = subject.rx
+        subject.rx
             .exportVideo(for: asset, destination: URL(string: "https://me.com")!)
+            .debug("-- requestCancelledTest --")
             .subscribe(observer)
-
-        XCTAssertFalse(subject.requestCancelled)
-        disposable.dispose()
+            .disposed(by: bag)
         XCTAssertTrue(subject.requestCancelled)
     }
 

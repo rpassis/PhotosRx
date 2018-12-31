@@ -56,11 +56,11 @@ func XCTAssertEqual<T>(
         guard
             let event = receivedEvents.first?.element,
             case .error = event else {
-            XCTFail("Incorrect Result event found, .error expected", file: file, line: line)
+            XCTFail("Incorrect Result event found \(receivedEvents.first), .error expected", file: file, line: line)
             return
         }
         guard let lastEvent = receivedEvents.last, case .completed = lastEvent else {
-            XCTFail("Incorrect Result event found, .completed expected", file: file, line: line)
+            XCTFail("Incorrect Result event: found \(receivedEvents.last), .completed expected", file: file, line: line)
             return
         }
 

@@ -66,7 +66,6 @@ extension Reactive where Base: PHImageManager {
             options.progressHandler = { progress, error, _, _ in
                 if let error = error {
                     observer.on(.next(.error(error)))
-                    observer.on(.completed)
                     return
                 }
                 observer.on(.next(.processing(Float(progress))))
@@ -142,7 +141,6 @@ extension Reactive where Base: PHImageManager {
                         return
                     }
                     observer.on(.next(.success(data)))
-                    observer.on(.completed)
             })
             return Disposables.create {
                 self.base.cancelImageRequest(requestId)
@@ -158,16 +156,56 @@ extension Reactive where Base: PHImageManager {
         options: PHVideoRequestOptions = PHVideoRequestOptions.default,
         exportPreset: String = AVAssetExportPresetHighestQuality,
         destination url: URL) -> Observable<PHImageManagerURLResult> {
-        return Observable.create({ observer -> Disposable in
-            options.progressHandler = { progress, error, _, _ in
-                if let error = error {
-                    observer.on(.next(.error(error)))
-                    observer.on(.completed)
-                    return
-                }
-                observer.on(.next(.processing(Float(progress))))
+        
+        // This progress handler gets called while the exportSession is
+        // running i.e. if the file has to be downloaded from the network
+        let progressHandlerObserver = PublishSubject<Float>()
+        options.progressHandler = { progress, error, _, _ in
+            if let error = error {
+                progressHandlerObserver.on(.error(error))
+                return
             }
-            let exportSessionProgressUpdater = ExportSessionProgressUpdater(observer: observer)
+            progressHandlerObserver.on(.next(Float(progress)))            
+        }
+        let networkDownloadObservable = progressHandlerObserver.asObservable()
+            .map { Result<URL>.processing($0) }
+            .catchError { Observable.just(Result.error($0)) }
+            .debug("--- network download --")
+
+        // This is the actual export Session that will get created
+        let export = self.requestExportSession(forVideo: asset, options: options, exportPreset: exportPreset)
+            .flatMap { session -> Observable<(Bool, AVAssetExportSession)> in
+                session.outputURL = url
+                return session.rx.determineCompatible(fileTypes: [AVFileType.mov]).map { ($0, session) }
+            }
+            .flatMap { args -> Observable<AVExportSessionStatusProgress> in
+                let (isCompatible, session) = args
+                guard isCompatible == true else {
+                    let error = PHImageManagerError.unsupportedVideoFormat
+                    return Observable.error(error)
+                }
+                return session.rx.export()
+            }
+            .map { $0.progress }
+            .materialize()
+            .map { materializedEvent -> Result<URL> in
+                switch materializedEvent {
+                case .completed: return Result.success(url)
+                case .next(let progress): return Result<URL>.processing(progress)
+                case .error(let e): return Result<URL>.error(e)
+                }
+            }
+            .debug("--- export session --")
+
+            return Observable.merge(networkDownloadObservable.takeUntil(export), export)
+
+    }
+
+    func requestExportSession(
+        forVideo asset: PHAsset,
+        options: PHVideoRequestOptions,
+        exportPreset: String) -> Observable<AVAssetExportSession> {
+        return Observable.create { observer -> Disposable in
             let requestId = self.base.requestExportSession(
                 forVideo: asset,
                 options: options,
@@ -175,50 +213,22 @@ extension Reactive where Base: PHImageManager {
                 resultHandler: { (session, info) in
                     guard let session = session else {
                         let error = PHImageManagerError.videoFetchRequestFailed
-                        observer.on(.next(.error(error)));
-                        observer.on(.completed)
+                        observer.on(.error(error))
                         return
                     }
-                    exportSessionProgressUpdater.session = session
                     if let error = info?[PHImageErrorKey] as? Error {
-                        observer.on(.next(.error(error)));
-                        observer.on(.completed)
+                        observer.on(.error(error))
                         return
                     }
-                    session.outputURL = url
-                    session.determineCompatibleFileTypes(completionHandler: { fileTypes in
-                        guard fileTypes.contains(AVFileType.mov) else {
-                            let error = PHImageManagerError.unsupportedVideoFormat
-                            observer.on(.next(.error(error)));
-                            observer.on(.completed)
-                            return
-                        }
-                        session.exportAsynchronously {
-                            switch session.status {
-                            case .completed:
-                                observer.on(.next(.success(url)))
-                                observer.on(.completed)
-                            case .waiting, .exporting:
-                                let progress = session.progress
-                                observer.on(.next(.processing(progress)))
-                            case .failed, .cancelled:
-                                let error = session.error ?? PHImageManagerError.videoFetchRequestFailed
-                                observer.on(.next(.error(error)))
-                                observer.on(.completed)
-                            case .unknown:
-                                break
-                            }
-                        }
-                    })
+                    observer.on(.next(session))
+                    observer.on(.completed)
             })
-
             return Disposables.create {
-                exportSessionProgressUpdater.session?.cancelExport()
-                exportSessionProgressUpdater.session = nil
                 self.base.cancelImageRequest(requestId)
             }
-        })
+        }
     }
+
 }
 
 fileprivate class ExportSessionProgressUpdater {
